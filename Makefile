@@ -5,6 +5,7 @@ minimal: requirements-minimal.txt venv/bin/activate
 # file, and pre-commit will run for all files that is tracked by git.
 .PHONY: test
 test: development
+	rm -rf tmp/python-package-boilerplate 2>/dev/null
 	venv/bin/cookiecutter . --output-dir tmp/ --overwrite-if-exists --no-input
 	venv/bin/mypy tmp/python-package-boilerplate/python_package_boilerplate
 	venv/bin/pre-commit run \

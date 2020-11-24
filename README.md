@@ -6,7 +6,7 @@ A personalized Python package template, to be used with
 ## Features
 
 - Development environment setup with `pytest`, `pre-commit`, `tox`, `coverage` and `mypy`
-
+- Helpful scripts to bump package (`bump2version`), and deploy to PyPI
 
 ## Quickstart
 

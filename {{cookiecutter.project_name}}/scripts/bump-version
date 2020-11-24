@@ -1,0 +1,84 @@
+#!/bin/bash
+# This is just a thin wrapper around bump2version, to support cases where there's no
+# current version in git.
+function usage() {
+    echo "Usage: bump-version [major|minor|patch]"
+}
+
+function main() {
+    verifyArguments "$@"
+    if [[ $? == 1 ]]; then
+        return 1
+    fi
+
+    installDependency
+
+    getLatestTagName
+    if [[ $? == 0 ]]; then
+        bumpVersion "$@"
+    else
+        setVersion
+    fi
+
+    # Since setVersion has already set the tags, at this point, the tag should already exist.
+    local tagName=`getLatestTagName`
+    git push origin HEAD
+    git push origin "$tagName"
+}
+
+function verifyArguments() {
+    local part="$1"
+    if [[ -z "$part" ]]; then
+        # We only allow bump-version to be used with no arguments if there's
+        # no current version.
+        getLatestTagName
+        if [[ $? == 0 ]]; then
+            usage
+            return 1
+        fi
+
+    elif [[ "$part" != "major" ]] && [[ "$part" != "minor" ]] && [[ "$part" != "patch" ]]; then
+        usage
+        return 1
+    fi
+
+    # Check if virtualenv is built.
+    test -f venv/bin/pip
+    if [[ $? != 0 ]]; then
+        echo 'error: Run `make development` first.'
+        return 1
+    fi
+
+    return 0
+}
+
+function getLatestTagName() {
+    local output
+    output=$(git describe --tags --abbrev=0 2>/dev/null)
+    if [[ $? != 0 ]]; then
+        return 1
+    fi
+
+    echo "$output"
+    return 0
+}
+
+function installDependency() {
+    # NOTE: We don't specify this in requirements-dev-minimal, since not all developers need
+    # to bump the version.
+    venv/bin/pip install bump2version
+}
+
+function setVersion() {
+    local version=$(grep -Eo '\d+\.\d+\.\d+' {{ cookiecutter.project_slug }}/__version__.py)
+
+    git commit -m "Initializing v$version"
+    git tag "v$version"
+}
+
+function bumpVersion() {
+    local part="$1"
+    venv/bin/bump2version "$part"
+}
+
+main "$@"
