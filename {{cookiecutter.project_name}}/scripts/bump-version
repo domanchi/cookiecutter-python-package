@@ -1,6 +1,8 @@
 #!/bin/bash
 # This is just a thin wrapper around bump2version, to support cases where there's no
 # current version in git.
+PACKAGE_NAME='{{ cookiecutter.project_slug }}'
+
 function usage() {
     echo "Usage: bump-version [major|minor|patch]"
 }
@@ -70,7 +72,7 @@ function installDependency() {
 }
 
 function setVersion() {
-    local version=$(grep -Eo '\d+\.\d+\.\d+' {{ cookiecutter.project_slug }}/__version__.py)
+    local version=$(grep -Eo '\d+\.\d+\.\d+' $PACKAGE_NAME/__version__.py)
 
     git commit -m "Initializing v$version"
     git tag "v$version"

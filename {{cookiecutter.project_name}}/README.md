@@ -1,3 +1,3 @@
-# {{ cookiecutter.project_name.replace('_', ' ').replace('-', ' ').title() }}
+# {{ cookiecutter.project_name }}
 
 TODO: Fill in here.

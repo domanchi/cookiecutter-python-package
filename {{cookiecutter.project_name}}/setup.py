@@ -23,7 +23,7 @@ with open(local_file('requirements-minimal.txt')) as f:
 
 
 setup(
-    name='{{ cookiecutter.project_slug }}',
+    name='{{ cookiecutter.project_name }}',
     packages=find_packages(exclude=(['test*', 'tmp*'])),
     version=VERSION,
     description='{{ cookiecutter.description }}',
