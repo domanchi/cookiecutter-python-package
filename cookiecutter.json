@@ -1,0 +1,7 @@
+{
+    "project_name": "python-package-boilerplate",
+    "description": "",
+    "author_name": "Aaron Loo",
+    "author_email": "admin@aaronloo.com",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}"
+}
